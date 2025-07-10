@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mapa interactivo de regulaciones globales</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <style>
+        #map { height: 500px; width: 100%; }
+    </style>
+</head>
+<body>
+    <div id="map"></div>
+    <script>
+        var map = L.map('map').setView([20, 0], 2); 
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; OpenStreetMap contributors'
+        }).addTo(map);
+
+        var paisesIA = [
+            { nombre: "Internacional", lat: 0, lng: 0, regulaciones: ["Normativa ISO/IEC 42001"], color: "#808080" }, // Gris
+            { nombre: "Unión Europea", lat: 50.8503, lng: 4.3517, regulaciones: ["Reglamento Europeo de IA 2024/1689", "Reglamento General de Protección de Datos (RGPD)"], color: "yellow" },
+            { nombre: "España", lat: 40.4637, lng: -3.7492, regulaciones: ["Ley Orgánica 3/2018 de Protección de Datos Personales (LOPDGDD)", "Real Decreto-Ley 9/2021 (Ley Rider)", "Agencia Española de Supervisión de IA"], color: "yellow" },
+            { nombre: "Portugal", lat: 38.736946, lng: -9.142685, regulaciones: ["Agenda do Trabalho Digno"], color: "yellow" },
+            { nombre: "Brasil", lat: -14.235, lng: -51.9253, regulaciones: ["Marco regulatorio IA (Projeto de Lei 2.338/2023)"], color: "#FF00FF" }, // Fucsia
+            { nombre: "Canadá", lat: 56.1304, lng: -106.3468, regulaciones: ["Proyecto de Ley C-27 (Ley de implementación de la carta digital de 2022)"], color: "green" },
+            { nombre: "Estados Unidos", lat: 37.0902, lng: -95.7129, regulaciones: ["Ley de Derechos Civiles (Título VII, 1964)", "Ley de estadounidenses con discapacidades (ADA)"], color: "green" },
+            { nombre: "China", lat: 35.8617, lng: 104.1954, regulaciones: ["Directrices para la gobernanza ética de IA", "Normativa sobre Ciberseguridad"], color: "red" },
+            { nombre: "Reino Unido", lat: 55.3781, lng: -3.4360, regulaciones: ["Marco Regulatorio de IA"], color: "yellow" },
+            { nombre: "Australia", lat: -25.2744, lng: 133.7751, regulaciones: ["Comité Selecto sobre la adopción de la IA"], color: "blue" },
+            { nombre: "India", lat: 20.5937, lng: 78.9629, regulaciones: ["Regulación en proceso"], color: "red" },
+            { nombre: "Israel", lat: 31.0461, lng: 34.8516, regulaciones: ["Tratado Global sobre IA"], color: "red" },
+            { nombre: "Nueva Zelanda", lat: -40.9006, lng: 174.8860, regulaciones: ["Carta de algoritmos de Nueva Zelanda"], color: "blue" },
+            { nombre: "Arabia Saudita", lat: 23.8859, lng: 45.0792, regulaciones: ["Estrategia Nacional de Datos e IA (NSDAI)", "Principio de ética en IA", "Guía de IA generativa para el sector público", "Ley de Protección de Datos Personales (PDPL)", "Centro Internacional para la Investigación y la ética de la IA"], color: "red" },
+            { nombre: "Singapur", lat: 1.3521, lng: 103.8198, regulaciones: ["Sistema regulador basado en la autogestión y estándares de conducta"], color: "red" },
+            { nombre: "Corea del Sur", lat: 35.9078, lng: 127.7669, regulaciones: ["Ley básica de IA"], color: "red" },
+            { nombre: "Emiratos Árabes Unidos", lat: 23.4241, lng: 53.8478, regulaciones: ["Política Nacional de IA"], color: "red" }
+        ];
+
+        paisesIA.forEach(pais => {
+            var marker = L.circleMarker([pais.lat, pais.lng], {
+                color: pais.color,
+                fillColor: pais.color,
+                fillOpacity: 0.7, // Mejora de la visibilidad
+                radius: 8 // Tamaño del marcador ajustado para que sean más visibles
+            })
+            .addTo(map)
+            .bindPopup(`<b>${pais.nombre}</b><br>` + pais.regulaciones.map(reg => `• ${reg}`).join("<br>"));
+
+            marker.on('click', function () {
+                this.openPopup();
+            });
+        });
+    </script>
+</body>
+</html>
